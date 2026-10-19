@@ -18,3 +18,5 @@ Os painéis consultam o servidor a cada 5 segundos quando visíveis. O primeiro 
 Dados para cálculo: média usa registros reais de 16–19/10, arredondados a 140,0; 400,0; 150,0; 50,0, com média185,0 µg/m³. Fontes e horários distintos, não uma média diária oficial. Moda usa uma série separada, explicitamente didática de 11–18/10: 150,0;180,0;150,0;120,0;210,0;150,0;240,0;240,0. Moda150,0 em3 dias. Evidências versionadas media-real-moda-didatica-7; anteriores preservadas.
 
 Interface prioritária para celular: largura máxima de 480 px, uma etapa por tela, rolagem interna quando necessária, fontes de leitura de 16 px e controles de toque de 48 px ou mais. Referência de interação: Brilliant, com identidade própria do professor.
+
+Repetição livre: após a primeira entrega, o aluno pode reiniciar para praticar. O status continua Entregue e o primeiro comprovante é preservado. Progresso de primeira realização continua no servidor. A repetição usa progresso por sessão no navegador, sem zerar o registro compartilhado. Sessões antigas em andamento retomam o progresso existente.
