@@ -15,6 +15,6 @@ Uma entrega por aluno e atividade. O comprovante é emitido pelo servidor; repet
 
 Os painéis consultam o servidor a cada 5 segundos quando visíveis. O primeiro acesso do professor requer criar a conta autorizada, confirmar o e-mail e entrar. Alunos selecionam turma e nome carregados do banco, sem código. Responsáveis e alunos consultam uma lista pública com nome, turma e status, sem login. Essa escolha não comprova a identidade da pessoa.
 
-Dados ambientais: registros identificados de 16 a 19/10/2026, com fontes, locais e horários diferentes. O registro de 19/10 é parcial. A média didática dos valores arredondados 140, 400, 150 e 50 é 185 µg/m³; esse conjunto não representa uma média diária de Manaus. É amodal. A interface distingue índice AQI, tamanho (µm), massa (µg) e concentração (µg/m³).
+Dados para cálculo: série explicitamente didática de 11 a 18/10: 150,0; 180,0; 150,0; 120,0; 210,0; 150,0; 240,0; 240,0 µg/m³. Média 180,0 e moda 150,0 (3 ocorrências). Valores ilustrativos da ordem de grandeza de registros reais, não medições das datas. Copos representam consumo diário: 800 mL em 4 dias = 200 mL/dia. Concentração de PM₂,₅ é distinguida de massa inalada. Evidências novas incluem versao_conteudo=didatica-6, média/moda; registros antigos preservados.
 
 Interface prioritária para celular: largura máxima de 480 px, uma etapa por tela, rolagem interna quando necessária, fontes de leitura de 16 px e controles de toque de 48 px ou mais. Referência de interação: Brilliant, com identidade própria do professor.

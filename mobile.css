@@ -15,3 +15,7 @@ body:not(:has(.app)) .wrap{max-width:480px;width:calc(100% - 32px);padding:22px 
 .screen .formula.fraction-equation{font-size:18px;line-height:1.45;padding:14px 0}
 .concept-explanation{margin:20px 0}.concept-explanation p{padding-left:14px;border-left:3px solid var(--cyan);margin:18px 0}.concept-explanation b{color:var(--cyan)}
 .screen-area{padding-bottom:28px}.screen .notice{color:#c5cec7}.screen .receipt p{font-size:18px}.screen .micro{font-size:12px}.screen h2{line-height:1.2}
+
+.screen .health-warning{padding:16px;border:2px solid var(--orange);border-radius:12px;background:#ffad7210;color:var(--text);font-size:18px;line-height:1.6}
+
+.eight-bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));height:auto;gap:18px 10px;align-items:end;margin:24px 0}.eight-bars .mini-bar{max-width:none;min-width:0;font-size:14px}.eight-bars .mini-bar b{font-size:16px}.eight-bars .mini-bar i{max-width:60px;margin:6px auto}.date-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
