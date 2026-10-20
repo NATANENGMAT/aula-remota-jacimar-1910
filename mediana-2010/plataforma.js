@@ -1,0 +1,18 @@
+'use strict';
+window.Remota=(()=>{
+ const url='https://bxvuqwnmqooxaoexnjty.supabase.co';
+ const key='sb_publishable_gv_lK9K2hrReKQvC-5Ou7Q_vI9c1NwI';
+ const api=url+'/functions/v1/jacimar-mediana-2010';
+ const storage=kind=>'jacimar2010_'+kind;
+ async function request(route,{body,token,auth,signal}={}){
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),18000);
+  try{const r=await fetch(api+'/'+route,{method:body?'POST':'GET',headers:{apikey:key,...(body?{'Content-Type':'application/json'}:{}),...(token?{'x-session':token}:{}),...(auth?{Authorization:'Bearer '+auth}:{})},body:body?JSON.stringify(body):undefined,signal:signal||controller.signal});const data=await r.json().catch(()=>({error:'Resposta inválida do servidor.'}));if(!r.ok){const e=new Error(data.error||'Não foi possível confirmar agora.');e.status=r.status;throw e}return data} catch(e){if(e.name==='AbortError')throw new Error('A conexão demorou. Tente novamente; nenhuma entrega será duplicada.');if(e instanceof TypeError)throw new Error('Sem conexão com o servidor. Verifique a internet e tente novamente.');throw e}finally{clearTimeout(timer)}
+ }
+ function session(kind,value){if(value===null){sessionStorage.removeItem(storage(kind));return null}if(value!==undefined){sessionStorage.setItem(storage(kind),JSON.stringify(value));return value}try{return JSON.parse(sessionStorage.getItem(storage(kind))||'null')}catch{return null}}
+ const date=value=>value?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Manaus',dateStyle:'short',timeStyle:'medium'}).format(new Date(value)):'—';
+ async function auth(path,body,token){const r=await fetch(url+'/auth/v1/'+path,{method:'POST',headers:{apikey:key,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw new Error(data.msg||data.error_description||data.message||'Não foi possível autenticar.');return data}
+ function receipt(container,data){container.replaceChildren();const title=document.createElement('h2');title.textContent=data.entrega?'Entrega confirmada':'Entrega ainda não confirmada';container.append(title);for(const [label,value] of [['Aluno',data.aluno.nome],['Turma',data.aluno.turma],['Atividade','Remota · 19/10/2026'],['Situação',data.entrega?'Recebida pelo servidor':'Em andamento: '+data.etapa+' de 12 etapas preparatórias'],['Recebida em',date(data.entrega?.enviada_em)],['Protocolo',data.entrega?.protocolo||'Emitido somente após o envio'],['Consulta da família',date(data.entrega?.familia_ciente_em)]]){const row=document.createElement('p');const b=document.createElement('b');b.textContent=label+': ';row.append(b,document.createTextNode(value));container.append(row)}}
+ function roster(classes,names,error){let revision=0;const load=async()=>{const current=++revision;names.replaceChildren(new Option(classes.value?'Carregando nomes…':'Selecione a turma primeiro',''));names.disabled=true;error.hidden=true;if(!classes.value)return;try{const data=await request('alunos?turma='+encodeURIComponent(classes.value));if(current!==revision)return;names.replaceChildren(new Option('Selecione seu nome',''));for(const aluno of data.alunos)names.add(new Option(aluno.nome,aluno.id));names.disabled=false;if(!data.alunos.length)throw new Error('Nenhum aluno cadastrado nesta turma.')}catch(e){if(current!==revision)return;error.textContent=e.message+' Selecione a turma novamente para tentar.';error.hidden=false}};classes.addEventListener('change',load);window.addEventListener('pageshow',()=>{if(classes.value&&names.disabled)load()});if(classes.value)load();}
+ return Object.freeze({url,key,request,session,date,auth,receipt,roster});
+})();
+
