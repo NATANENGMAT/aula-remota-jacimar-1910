@@ -9,9 +9,23 @@
  const cache=new Map(),failures=new Set();let selected='',busy=false,poll;
  const key=name=>name.replace(/\s*\*$/,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
  const delivered=s=>Boolean(s.enviada_em||s.entregou);
+ // Identidades confirmadas pelo professor em 21/10/2026; restritas à escola e turma.
+ const aliases=[['3º T1','Isabelly Oliveira','Isabelly De Oliveira'],['3º T1','Marlyson Nascimento','Marlyson Do Nascimento'],['3º T1','Sarah Oliveira','Sarah De Oliveira*'],['3º T2','Samuel Silva','Samuel Da Silva'],['3º T2','Sophia Feitosa','Sophia Bezerra']];
+ function reconcile(a){
+  if(a.escola!=='jacimar')return a;
+  const roster=new Map();
+  for(const original of a.alunos){
+   const match=aliases.find(([turma,old,current])=>turma===original.turma&&(key(original.nome)===key(old)||key(original.nome)===key(current)));
+   const s={...original,nome:match?match[2]:original.nome};
+   const id=s.turma+'|'+key(s.nome),prior=roster.get(id);
+   if(prior){const times=[prior.enviada_em,s.enviada_em].filter(Boolean).sort((x,y)=>Date.parse(x)-Date.parse(y));roster.set(id,{...prior,entregou:delivered(prior)||delivered(s),enviada_em:times.at(-1)||null});}
+   else roster.set(id,s);
+  }
+  return {...a,alunos:[...roster.values()]};
+ }
  const short=d=>d.slice(8,10)+'/'+d.slice(5,7),date=d=>new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Manaus',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d));
  function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
- const activities=()=>[...cache.values()].flatMap(data=>data.atividades).filter(a=>a.escola===school).sort((a,b)=>b.data.localeCompare(a.data)||a.id.localeCompare(b.id));
+ const activities=()=>[...cache.values()].flatMap(data=>data.atividades).filter(a=>a.escola===school).map(reconcile).sort((a,b)=>b.data.localeCompare(a.data)||a.id.localeCompare(b.id));
  function render(){const all=activities();const classes=[...new Set(all.flatMap(a=>a.alunos.map(s=>s.turma)))].sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true}));if(!classes.includes(selected))selected=classes[0]||'';const focus=document.activeElement?.dataset?.turma;$('classes').replaceChildren();for(const turma of classes){const button=node('button',turma.replace('º T','º ano '));button.type='button';button.dataset.turma=turma;button.setAttribute('aria-pressed',String(turma===selected));button.addEventListener('click',()=>{selected=turma;$('student-search').value='';render()});$('classes').append(button);if(focus===turma)button.focus({preventScroll:true})}$('class-title').textContent=selected?selected.replace('º T','º ano '):'';renderTable(all)}
  function renderTable(all=activities()){
   const available=all.filter(a=>a.alunos.some(s=>s.turma===selected));const prior=$('activities').querySelector('.matrix-scroll');const scroll={x:prior?.scrollLeft||0,y:prior?.scrollTop||0};const names=new Map();const columns=available.map(a=>{const students=a.alunos.filter(s=>s.turma===selected);const roster=new Map();for(const s of students){const id=key(s.nome);names.set(id,names.get(id)||s.nome);roster.set(id,s)}return {...a,roster,students}});const term=key($('student-search').value||'');const shown=[...names].filter(([,name])=>key(name).includes(term)).sort((a,b)=>a[1].localeCompare(b[1],'pt-BR'));$('activities').replaceChildren();if(!columns.length){$('activities').append(node('p',failures.size?'Os registros estão indisponíveis. Tente atualizar.':'Nenhuma atividade cadastrada para esta turma.','empty'));return}
@@ -22,4 +36,6 @@
  async function refresh(){if(busy||document.hidden)return;busy=true;$('refresh').disabled=true;try{await Promise.allSettled(sources.map(async source=>{try{const r=await fetch(source.url,{headers:source.key?{apikey:source.key}:{},signal:AbortSignal.timeout(18000)});const data=await r.json();if(!r.ok||!Array.isArray(data.atividades))throw Error();cache.set(source.id,data);failures.delete(source.id)}catch{failures.add(source.id)}}));render();$('error').hidden=!failures.size;if(failures.size)$('error').textContent='Não foi possível atualizar todas as fontes originais. Alguns registros podem estar ausentes ou desatualizados; tente Atualizar. Falha de conexão não significa falta de entrega.';const times=[...cache.values()].map(d=>d.atualizado_em).filter(Boolean).sort();$('updated').textContent=times.length?'Fontes consultadas em '+date(times[0])+' · Manaus':'Aguardando os registros das atividades originais.'}finally{busy=false;$('refresh').disabled=false}}
  $('student-search').addEventListener('input',()=>renderTable());$('refresh').addEventListener('click',refresh);function start(){clearInterval(poll);poll=setInterval(refresh,15000);refresh()}document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});window.addEventListener('pagehide',()=>clearInterval(poll));window.addEventListener('pageshow',e=>{if(e.persisted)start()});start();
 })();
+
+
 
