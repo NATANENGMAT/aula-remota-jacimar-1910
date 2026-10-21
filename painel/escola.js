@@ -4,8 +4,9 @@
  const sources=[{id:'principal',url:'https://bxvuqwnmqooxaoexnjty.supabase.co/functions/v1/painel-geral-entregas',key:'sb_publishable_gv_lK9K2hrReKQvC-5Ou7Q_vI9c1NwI'}];
  if(school==='elisa-bessa')sources.push({id:'elisa-original',url:'https://iorfjnxmemcaxkjeoguj.supabase.co/functions/v1/painel-geral-entregas',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvcmZqbnhtZW1jYXhramVvZ3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MTg2MjksImV4cCI6MjEwNjM5NDYyOX0.vf6PvLcIiOPAT6yJLu_jEnKfjVt7wokR1a08SAvvzyM'});
  if(school==='jacimar')sources.push({id:'historico-3x3',url:'historico-jacimar-3x3.json'});
+ if(school==='elisa-bessa')sources.push({id:'elisa-novo-banco',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/pontos-2110/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  const cache=new Map(),failures=new Set();let selected='',busy=false,poll;
- const key=name=>name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
+ const key=name=>name.replace(/\s*\*$/,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
  const delivered=s=>Boolean(s.enviada_em||s.entregou);
  const short=d=>d.slice(8,10)+'/'+d.slice(5,7),date=d=>new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Manaus',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d));
  function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
