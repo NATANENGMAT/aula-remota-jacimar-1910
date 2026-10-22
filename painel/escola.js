@@ -6,6 +6,7 @@
  if(school==='jacimar')sources.push({id:'historico-3x3',url:'historico-jacimar-3x3.json'});
  if(school==='elisa-bessa')sources.push({id:'elisa-novo-banco',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/pontos-2110/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  if(school==='jacimar')sources.push({id:'jacimar-novo-banco',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/media-equilibrio-2110/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
+ if(school==='elisa-bessa')sources.push({id:'elisa-plano-2210',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/plano-2210/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  const cache=new Map(),failures=new Set();let selected='',busy=false,poll;
  const key=name=>name.replace(/\s*\*$/,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
  const delivered=s=>Boolean(s.enviada_em||s.entregou);
