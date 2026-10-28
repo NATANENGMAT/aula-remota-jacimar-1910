@@ -7,6 +7,9 @@
  if(school==='elisa-bessa')sources.push({id:'elisa-novo-banco',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/pontos-2110/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  if(school==='jacimar')sources.push({id:'jacimar-novo-banco',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/media-equilibrio-2110/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  if(school==='elisa-bessa')sources.push({id:'elisa-plano-2210',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/plano-2210/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
+ if(school==='jacimar')sources.push({id:'jacimar-moda-2210',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/moda-2210/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
+ if(school==='jacimar')sources.push({id:'jacimar-graficos-2310',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/graficos-2310/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
+ if(school==='elisa-bessa')sources.push({id:'elisa-identificando-2310',url:'https://jzepdmolnoobgbgdavyf.supabase.co/functions/v1/identificando-2310/painel',key:'sb_publishable_wjcJ0tnDxK9ucEu3B3vchQ_CtMn6R8M'});
  const cache=new Map(),failures=new Set();let selected='',busy=false,poll;
  const key=name=>name.replace(/\s*\*$/,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
  const delivered=s=>Boolean(s.enviada_em||s.entregou);
@@ -37,6 +40,7 @@
  async function refresh(){if(busy||document.hidden)return;busy=true;$('refresh').disabled=true;try{await Promise.allSettled(sources.map(async source=>{try{const r=await fetch(source.url,{headers:source.key?{apikey:source.key}:{},signal:AbortSignal.timeout(18000)});const data=await r.json();if(!r.ok||!Array.isArray(data.atividades))throw Error();cache.set(source.id,data);failures.delete(source.id)}catch{failures.add(source.id)}}));render();$('error').hidden=!failures.size;if(failures.size)$('error').textContent='Não foi possível atualizar todas as fontes originais. Alguns registros podem estar ausentes ou desatualizados; tente Atualizar. Falha de conexão não significa falta de entrega.';const times=[...cache.values()].map(d=>d.atualizado_em).filter(Boolean).sort();$('updated').textContent=times.length?'Fontes consultadas em '+date(times[0])+' · Manaus':'Aguardando os registros das atividades originais.'}finally{busy=false;$('refresh').disabled=false}}
  $('student-search').addEventListener('input',()=>renderTable());$('refresh').addEventListener('click',refresh);function start(){clearInterval(poll);poll=setInterval(refresh,15000);refresh()}document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});window.addEventListener('pagehide',()=>clearInterval(poll));window.addEventListener('pageshow',e=>{if(e.persisted)start()});start();
 })();
+
 
 
 
